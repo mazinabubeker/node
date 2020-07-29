@@ -15,6 +15,6 @@ function newConnection(socket){
     users.push(username);
     console.log("ho");
     socket.broadcast.emit('new_user_resp', username);
-    socket.emit('new_user_resp', username);
+    socket.emit('new_user_resp_2', username);
   });
 }

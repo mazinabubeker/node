@@ -11,12 +11,17 @@ $(document).ready(function(){
     });
 
     socket.on('new_user_resp', name=>{
-        addNewUser(name);
-    })
+        addNewUser(name, true);
+    });
+    socket.on('new_user_resp_2', name=>{
+        addNewUser(name, false);
+    });
 });
 
-function addNewUser(name){
+function addNewUser(name, boolbool){
     let new_element = `<div class='user'>` + name + `</div>`;
     document.getElementById('box').insertAdjacentHTML('afterbegin', new_element);
-    document.getElementById('name').remove();
+    if(!boolbool){
+        document.getElementById('name').remove();
+    }
 }
