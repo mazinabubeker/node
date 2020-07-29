@@ -3,23 +3,20 @@ var ball_element;
 
 $(document).ready(function(){    
     socket = io();
-    socket.on('mouse', updatePicture);
-    ball_element = document.getElementById('ball');
+    // socket.emit('mouse', data);
+    document.getElementById('name').addEventListener('keypress', e=>{
+        if(window.event.keyCode==13){e.preventDefault();}else{return;}
+        if(document.getElementById('name').value == ''){return;}
+        socket.emit('new_user', document.getElementById('name').value);
+    });
+
+    socket.on('new_user_resp', name=>{
+        addNewUser(name);
+    })
 });
 
-function updatePicture(e){
-    ball_element.style.top = (Math.floor(window.innerHeight*e.y)-10).toString() + "px";
-    ball_element.style.left = (Math.floor(window.innerWidth*e.x)-10).toString() + "px";
-}
-
-function mouseUpdate(e){
-    var data = {
-        x: e.clientX/window.innerWidth,
-        y: e.clientY/window.innerHeight
-    };
-    socket.emit('mouse', data);
-}
-
-function activateThing(){
-    document.onmousemove = mouseUpdate;
+function addNewUser(name){
+    let new_element = `<div class='user'>` + name + `</div>`;
+    document.getElementById('box').insertAdjacentHTML('afterbegin', new_element);
+    document.getElementById('name').remove();
 }

@@ -6,12 +6,15 @@ app.use(express.static('public'));
 var io = soccc(server);
 io.sockets.on('connection', newConnection)
 
+var users = []
+
 function newConnection(socket){
   console.log("Connected: " + socket.id);
-  socket.on('mouse', mouseUpdate);
-  function mouseUpdate(data){
-    console.log(data);
-    socket.broadcast.emit('mouse', data);
-    socket.emit('mouse', data);
-  }
+  socket.on('new_user', username=>{
+    console.log(username);
+    users.push(username);
+    console.log("ho");
+    socket.broadcast.emit('new_user_resp', username);
+    socket.emit('new_user_resp', username);
+  });
 }
