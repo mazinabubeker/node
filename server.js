@@ -8,10 +8,8 @@ io.sockets.on('connection', newConnection)
 
 function newConnection(socket){
   console.log("Connected: " + socket.id);
-  socket.on('play_key', index=>{
-    socket.broadcast.emit('play_key_resp', index);
-  });
-  socket.on('stop_key', index=>{
-    socket.broadcast.emit('stop_key_resp', index);
-  });
+
 }
+
+
+
