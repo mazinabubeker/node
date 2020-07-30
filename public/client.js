@@ -13,20 +13,35 @@ $(document).ready(function(){
     //         setData(event.alpha, event.beta, event.gamma);
     //     });
     // }
-    if (window.DeviceOrientationEvent) {
-        window.addEventListener('deviceorientation', (e)=>{
-          setData(event.alpha, event.beta, event.gamma);
-        });
-        console.log("fff");
-      }
 
-      if (window.DeviceMotionEvent) {
-        window.addEventListener('devicemotion', (e)=>{
-          // document.querySelector('body').innerHTML = "INDEED OH MY DO IT DO IT";
-        });
-        console.log("fff");
-        document.querySelector('body').style.backgroundColor = "green";
-      }
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+      DeviceOrientationEvent.requestPermission()
+        .then(permissionState => {
+          if (permissionState === 'granted') {
+            window.addEventListener('deviceorientation', () => {
+              setData(event.alpha, event.beta, event.gamma);
+            });
+          }
+        })
+        .catch(console.error);
+    } else {
+      document.querySelector('body').innerHTML = "Request not granted";
+    }
+
+    // if (window.DeviceOrientationEvent) {
+    //     window.addEventListener('deviceorientation', (e)=>{
+    //       setData(event.alpha, event.beta, event.gamma);
+    //     });
+    //     console.log("fff");
+    //   }
+
+    //   if (window.DeviceMotionEvent) {
+    //     window.addEventListener('devicemotion', (e)=>{
+    //       // document.querySelector('body').innerHTML = "INDEED OH MY DO IT DO IT";
+    //     });
+    //     console.log("fff");
+    //     document.querySelector('body').style.backgroundColor = "green";
+    //   }
 });
 
 // import React from 'react';
