@@ -28,9 +28,9 @@ $(document).ready(function(){
 function executeListener(){
   document.body.appendChild( renderer.domElement );
   socket.on('update_rotation', val=>{
-      data.x = val.x/40;
-      data.y = val.y/40;
-      data.z = val.z/40;
+      data.x = val.x;
+      data.y = val.y;
+      data.z = val.z;
       // data.x += .1;
       // data.y += .1;
   });
@@ -50,9 +50,9 @@ function executeListener(){
 function animate() {
 	requestAnimationFrame( animate );
   renderer.render( scene, camera );
-  cube.rotation.x = data.x;
-  cube.rotation.y = data.y;
-  cube.rotation.z = data.z;
+  cube.rotation.x = degrees_to_radians(data.x);
+  cube.rotation.y = degrees_to_radians(data.y);
+  cube.rotation.z = degrees_to_radians(data.z);
 }
 
 function executeSender(){
@@ -88,4 +88,10 @@ function startRequest(){
       // Has access
       console.log("Has access");
     }
+}
+
+function degrees_to_radians(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
 }
