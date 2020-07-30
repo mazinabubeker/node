@@ -7,14 +7,13 @@ function setData(x,y,z){
 $(document).ready(function(){    
     // socket = io();
 
-    if (window.DeviceOrientationEvent) {
-        setData();
-        window.addEventListener("deviceorientation", function (event) {
-            setData(event.alpha, event.beta, event.gamma);
-        });
-    }
+    
 });
 
 
 
-
+if (window.DeviceOrientationEvent) {
+    window.addEventListener("deviceorientation", function (event) {
+        setData(event.alpha, event.beta, event.gamma);
+    });
+}
