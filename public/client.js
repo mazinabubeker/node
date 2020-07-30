@@ -27,9 +27,9 @@ $(document).ready(function(){
 function executeListener(){
   document.body.appendChild( renderer.domElement );
   socket.on('update_rotation', val=>{
-      data.x = info.x;
-      data.y = info.y;
-      data.z = info.z;
+      data.x = val.x/5;
+      data.y = val.y/5;
+      data.z = val.z/5;
   });
   var geometry = new THREE.BoxGeometry();
   var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
@@ -55,13 +55,14 @@ function executeSender(){
 function startRequest(){
   document.body.style.backgroundColor = "blue";
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    document.body.style.backgroundColor = "yellow";
+    document.body.style.backgroundColor = "black";
     DeviceOrientationEvent.requestPermission()
       .then(permissionState => {
         if (permissionState === 'granted') {
           // User accepted
 
           window.addEventListener('deviceorientation', () => {
+            // document.body.style.backgroundColor = "black";
             data.x = event.alpha;
             data.y = event.beta;
             data.z = event.gamma;
