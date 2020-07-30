@@ -3,8 +3,8 @@ var socket;
 var data = {x: 0, y: 0, z: 0, j: 0, k: 0, l: 0}
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-
-var renderer = new THREE.WebGLRenderer();
+var light;
+var renderer = new THREE.WebGLRenderer({antialias: true});
 renderer.setSize( window.innerWidth, window.innerHeight );
 
 var cube;
@@ -37,6 +37,10 @@ function executeListener(){
   var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
   cube = new THREE.Mesh( geometry, material );
   scene.add(cube);
+
+  light = new THREE.PointLight(0xFFFFFF,1,500);
+  light.position.set(10,0,25);
+  scene.add(light);
 
   camera.position.z = 5;
   animate();
@@ -85,9 +89,3 @@ function startRequest(){
       console.log("Has access");
     }
 }
-
-
-
-
-
-

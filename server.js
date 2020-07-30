@@ -23,6 +23,3 @@ function newConnection(socket){
   }
   user_id++;
 }
-
-
-
