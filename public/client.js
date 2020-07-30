@@ -65,9 +65,12 @@ function startRequest(){
 
           window.addEventListener('deviceorientation', () => {
             // document.body.style.backgroundColor = "black";
-            data.x = event.alpha;
-            data.y = event.beta;
-            data.z = event.gamma;
+            if(data.x == Math.round(event.alpha) || data.y == Math.round(event.beta) || data.z == Math.round(event.gamma)){
+              return;
+            }
+            data.x = Math.round(event.alpha);
+            data.y = Math.round(event.beta);
+            data.z = Math.round(event.gamma);
             setData();
             socket.emit('new_rotation', {x: event.alpha, y: event.beta, z: event.gamma});
           });
