@@ -8,7 +8,6 @@ io.sockets.on('connection', newConnection)
 
 function newConnection(socket){
   console.log("Connected: " + socket.id);
-
 }
 
 
