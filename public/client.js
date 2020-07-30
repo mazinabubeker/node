@@ -3,21 +3,19 @@ var gyroData = {a: 0, x: 0, y: 0, z: 0, q: 0, r: 0}
 $(document).ready(function(){    
     socket = io();
     if (window.DeviceOrientationEvent) {
-        window.addEventListener("deviceorientation", function () {
+        window.addEventListener("deviceorientation", function (event) {
             gyroData.a = event.beta;
             gyroData.x = event.gamma;
+            gyroData.y = event.alpha;
+            gyroData.z = event.absolute;
             setData();
         }, true);
-    } else if (window.DeviceMotionEvent) {
-        window.addEventListener('devicemotion', function () {
+    }
+    if (window.DeviceMotionEvent) {
+        window.addEventListener('devicemotion', function (event) {
+            console.log("BEGER")
             gyroData.y = event.acceleration.x;
             gyroData.z = event.acceleration.y;
-            setData();
-        }, true);
-    } else {
-        window.addEventListener("MozOrientation", function () {
-            gyroData.q = orientation.x;
-            gyroData.r = orientation.y;
             setData();
         }, true);
     }
