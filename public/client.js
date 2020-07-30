@@ -35,7 +35,7 @@ function executeListener(){
       // data.y += .1;
   });
   var geometry = new THREE.BoxGeometry();
-  var material = new THREE.MeshBasicMaterial( { color: 0xe8ad2e } );
+  var material = new THREE.MeshLambertMaterial( { color: 0xe8ad2e } );
   cube = new THREE.Mesh( geometry, material );
   scene.add(cube);
 
