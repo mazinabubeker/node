@@ -46,7 +46,9 @@ function startRequest(){
         document.querySelector('body').innerHTML = "Not granted";
       });
   } else {
-    document.querySelector('body').innerHTML = "Other";
+    window.addEventListener('deviceorientation', () => {
+      setData(event.alpha, event.beta, event.gamma);
+    });
   }
 }
 
