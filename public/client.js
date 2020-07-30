@@ -14,19 +14,7 @@ $(document).ready(function(){
     //     });
     // }
 
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
-          if (permissionState === 'granted') {
-            window.addEventListener('deviceorientation', () => {
-              setData(event.alpha, event.beta, event.gamma);
-            });
-          }
-        })
-        .catch(console.error);
-    } else {
-      document.querySelector('body').innerHTML = "Request not granted";
-    }
+    
 
     // if (window.DeviceOrientationEvent) {
     //     window.addEventListener('deviceorientation', (e)=>{
@@ -43,6 +31,24 @@ $(document).ready(function(){
     //     document.querySelector('body').style.backgroundColor = "green";
     //   }
 });
+
+function startRequest(){
+  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+    DeviceOrientationEvent.requestPermission()
+      .then(permissionState => {
+        if (permissionState === 'granted') {
+          window.addEventListener('deviceorientation', () => {
+            setData(event.alpha, event.beta, event.gamma);
+          });
+        }
+      })
+      .catch(e=>{
+        document.querySelector('body').innerHTML = "Not granted";
+      });
+  } else {
+    document.querySelector('body').innerHTML = "Other";
+  }
+}
 
 // import React from 'react';
 // import ReactDOM from 'react-dom';
