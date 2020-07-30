@@ -27,9 +27,11 @@ $(document).ready(function(){
 function executeListener(){
   document.body.appendChild( renderer.domElement );
   socket.on('update_rotation', val=>{
-      data.x = val.x/80;
-      data.y = val.y/80;
-      data.z = val.z/80;
+      // data.x = val.x/80;
+      // data.y = val.y/80;
+      // data.z = val.z/80;
+      data.x += .1;
+      data.y += .1;
   });
   var geometry = new THREE.BoxGeometry();
   var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
