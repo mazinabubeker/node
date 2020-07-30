@@ -35,7 +35,7 @@ function executeListener(){
       // data.y += .1;
   });
   var geometry = new THREE.BoxGeometry();
-  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+  var material = new THREE.MeshBasicMaterial( { color: 0xe8ad2e } );
   cube = new THREE.Mesh( geometry, material );
   scene.add(cube);
 
@@ -57,12 +57,11 @@ function animate() {
 
 function executeSender(){
   document.body.style.backgroundColor = "orange";
+  document.body.onclick = startRequest;
 }
 
 function startRequest(){
-  document.body.style.backgroundColor = "blue";
   if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    document.body.style.backgroundColor = "black";
     DeviceOrientationEvent.requestPermission()
       .then(permissionState => {
         if (permissionState === 'granted') {
@@ -74,10 +73,10 @@ function startRequest(){
             //   return;
             // }
             data.x = event.alpha;
-            data.y = event.beta;
-            data.z = event.gamma;
+            data.y = event.beta+180;
+            data.z = event.gamma+180;
             setData();
-            socket.emit('new_rotation', {x: event.alpha, y: event.beta, z: event.gamma});
+            socket.emit('new_rotation', {x: event.alpha, y: event.beta+180, z: event.gamma+180});
           });
         }
       })
