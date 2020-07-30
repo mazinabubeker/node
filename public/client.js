@@ -15,14 +15,30 @@ function setData(){
 
 $(document).ready(function(){    
     socket = io();
-    document.body.style.backgroundColor = "green";
-    socket.on('three_time', executeThree);
-    socket.on('update_rotation', info=>{
+    socket.on('execute_action', val=>{
+      if(val==0){
+        executeListener();
+      }else{
+        executeSender();
+      }
+    });
+});
+
+function executeListener(){
+  document.body.appendChild( renderer.domElement );
+  socket.on('update_rotation', val=>{
       data.x = info.x;
       data.y = info.y;
       data.z = info.z;
-    });
-});
+  });
+  var geometry = new THREE.BoxGeometry();
+  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+  cube = new THREE.Mesh( geometry, material );
+  scene.add(cube);
+
+  camera.position.z = 5;
+  animate();
+}
 
 function animate() {
 	requestAnimationFrame( animate );
@@ -32,17 +48,9 @@ function animate() {
   cube.rotation.z = data.z;
 }
 
-function executeThree(){
-  document.body.onclick = "";
-  document.body.appendChild( renderer.domElement );
-
-  var geometry = new THREE.BoxGeometry();
-  var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-  cube = new THREE.Mesh( geometry, material );
-  scene.add(cube);
-
-  camera.position.z = 5;
-  animate();
+function executeSender(){
+  document.body.ontouchstart = "startFunction()";
+  document.body.style.backgroundColor = "orange";
 }
 
 function startRequest(){
@@ -53,44 +61,24 @@ function startRequest(){
       .then(permissionState => {
         if (permissionState === 'granted') {
           // User accepted
-          window.addEventListener('deviceorientation', () => {
-            document.body.style.backgroundColor = "orange";
 
+          window.addEventListener('deviceorientation', () => {
             data.x = event.alpha;
             data.y = event.beta;
             data.z = event.gamma;
-            socket.io('new_rotation', {x: event.alpha, y: event.beta, z: event.gamma});
             setData();
+            socket.emit('new_rotation', {x: event.alpha, y: event.beta, z: event.gamma});
           });
         }
       })
       .catch(e=>{
         // User declined
+        console.log("Declined");
       });
-  } else {
-    // Has access
-  }
-
-  // if (typeof DeviceMotionEvent.requestPermission === 'function') {
-  //   DeviceMotionEvent.requestPermission()
-  //     .then(permissionState => {
-  //       if (permissionState === 'granted') {
-  //         // User accepted
-  //         window.addEventListener('devicemotion', () => {
-  //             data.j = event.acceleration.x;
-  //             data.k = event.acceleration.y;
-  //             data.l = event.acceleration.z;
-  //             // setData();
-  //         });
-  //       }
-  //     })
-  //     .catch(e=>{
-  //       // User declined
-  //     });
-  // } else {
-  //   // User already has access
-
-  // }
+    } else {
+      // Has access
+      console.log("Has access");
+    }
 }
 
 
