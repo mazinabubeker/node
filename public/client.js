@@ -49,7 +49,6 @@ function animate() {
 }
 
 function executeSender(){
-  document.body.ontouchstart = "startFunction()";
   document.body.style.backgroundColor = "orange";
 }
 
