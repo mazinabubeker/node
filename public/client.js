@@ -92,16 +92,16 @@ function startRequest(){
     } else {
       // Has access
       window.addEventListener('deviceorientation', () => {
-        // document.body.style.backgroundColor = "black";
-        // if(data.x == Math.round(event.alpha) || data.y == Math.round(event.beta) || data.z == Math.round(event.gamma)){
-        //   return;
-        // }
-        if(Math.abs(event.alpha - data.x) > 30){return;}
-        data.x = event.alpha;
-        data.y = event.beta+180;
-        data.z = event.gamma+180;
+        let newX = Math.round(event.alpha)
+        let newY = Math.round(event.beta+180);
+        let newZ = Math.round(event.gamma+180);
+
+        if(newX == data.x && newY == data.y && newZ == data.z){return;}
+        data.x = newX;
+        data.y = newY;
+        data.z = newZ;
         setData();
-        socket.emit('new_rotation', {x: event.alpha, y: event.beta+180, z: event.gamma+180});
+        socket.emit('new_rotation', {x: newX, y: newY, z: newZ});
       });
     }
 }
