@@ -7,7 +7,6 @@ var io = soccc(server);
 io.sockets.on('connection', newConnection)
 
 var user_id = 0;
-let a = 5;
 
 function newConnection(socket){
   console.log("Connected user: " + socket.id);
