@@ -51,14 +51,14 @@ function executeListener(){
 function animate() {
 	requestAnimationFrame( animate );
   renderer.render( scene, camera );
-  // cube.rotation.x = degrees_to_radians(data.y);
-  // cube.rotation.y = degrees_to_radians(data.z);
-  // cube.rotation.z = degrees_to_radians(data.x);
-  cube.rotation.x += .01;
-  cube.rotation.y += .01;
-  cube.scale.x = 1 + data.x/100;
-  cube.scale.y = 1 + data.x/100;
-  cube.scale.z = 1 + data.x/100;
+  cube.rotation.x = degrees_to_radians(data.y);
+  cube.rotation.y = degrees_to_radians(data.z);
+  cube.rotation.z = degrees_to_radians(data.x);
+  // cube.rotation.x += .01;
+  // cube.rotation.y += .01;
+  // cube.scale.x = 1 + data.x/100;
+  // cube.scale.y = 1 + data.x/100;
+  // cube.scale.z = 1 + data.x/100;
 }
 
 function executeSender(){
@@ -90,7 +90,7 @@ function runOrientationListener(){
     let newX = Math.round(event.alpha)
     let newY = Math.round(event.beta+180);
     let newZ = Math.round(event.gamma+180);
-    if(Math.abs(newX - data.x) > 30){return;}
+    // if(Math.abs(newX - data.x) > 30){return;}
     if(newX == data.x && newY == data.y && newZ == data.z){return;}
     data.x = newX;
     data.y = newY;
