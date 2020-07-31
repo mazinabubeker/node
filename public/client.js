@@ -43,19 +43,19 @@ function executeListener(){
   light.position.set(0,0,25);
   scene.add(light);
 
-  camera.position.z = 5;
-  camera.rotation.order = 'ZXY';
+  camera.position.z = 4;
+  // camera.rotation.order = 'ZXY';
   animate();
 }
 
 function animate() {
 	requestAnimationFrame( animate );
   renderer.render( scene, camera );
-  // cube.rotation.x = degrees_to_radians(data.y);
-  // cube.rotation.y = degrees_to_radians(data.z);
-  // cube.rotation.z = degrees_to_radians(data.x);
-  cube.rotation.x += .02;
-  cube.rotation.y += .02;
+  cube.rotation.x = degrees_to_radians(data.y);
+  cube.rotation.y = degrees_to_radians(data.z);
+  cube.rotation.z = degrees_to_radians(data.x);
+  // cube.rotation.x += .02;
+  // cube.rotation.y += .02;
   // if(data.x/20 < 1){
   //   cube.scale.x = 1;
   // }else{
@@ -71,9 +71,9 @@ function animate() {
   // }else{
   //   cube.scale.z = data.z/6;
   // }
-  cube.scale.x = 1 + data.x/100;
-  cube.scale.y = 1 + data.x/100;
-  cube.scale.z = 1 + data.x/100;
+  // cube.scale.x = 1 + data.x/100;
+  // cube.scale.y = 1 + data.x/100;
+  // cube.scale.z = 1 + data.x/100;
 }
 
 function executeSender(){
