@@ -1,25 +1,17 @@
 {
-  "name": "node",
+  "name": "client_credentials",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mazinabubeker/node.git"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/mazinabubeker/node/issues"
-  },
-  "homepage": "https://github.com/mazinabubeker/node#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "socket.io": "^2.3.0",
-    "yarn": "^1.22.4"
+    "node-fetch": "^2.6.0",
+    "querystring": "^0.2.0",
+    "request": "^2.88.2"
   }
 }

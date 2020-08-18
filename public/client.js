@@ -1,107 +1,102 @@
-var socket;
+var auth_code = '';
+var auth_token = '';
 
-var data = {x: 1, y: 1, z: 1, j: 0, k: 0, l: 0}
-var scene = new THREE.Scene();
-var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
-var light;
-var renderer = new THREE.WebGLRenderer({antialias: true});
-renderer.setClearColor("#ffffff");
-renderer.setSize( window.innerWidth, window.innerHeight );
-
-var cube;
-
-function setData(){
-    document.body.innerHTML = `x: ` + data.x + `<br>y: ` + data.y + `<br>z: ` + data.z + `<br>j: ` + data.j + `<br>k: ` + data.k + `<br>l: ` + data.l;
-}
-
-$(document).ready(function(){    
-    socket = io();
-    socket.on('execute_action', val=>{
-      if(val==0){
-        executeListener();
-      }else{
-        executeSender();
-      }
-    });
+$(document).ready(function(){
+    if(window.location.href.includes('code')){
+        document.getElementById('btn-login').remove();
+        const urlParams = new URLSearchParams(window.location.search);
+        auth_code = urlParams.get('code');
+        let auth_btn = `<div id='btn-authorize' class='btn' onclick='retrieve_token()'>AUTHORIZE</div>`;
+        document.body.insertAdjacentHTML('beforeend', auth_btn);
+    }
 });
 
-function executeListener(){
-  document.body.appendChild( renderer.domElement );
-  socket.on('update_rotation', val=>{
-      data.x = val.x;
-      data.y = val.y;
-      data.z = val.z;
-      // data.x += .1;
-      // data.y += .1;
-  });
-  var geometry = new THREE.BoxGeometry();
-  var material = new THREE.MeshLambertMaterial( { color: 0xe8ad2e } );
-  cube = new THREE.Mesh( geometry, material );
-  scene.add(cube);
-
-  light = new THREE.PointLight(0xFFFFFF,1.1,500);
-  light.position.set(0,0,25);
-  scene.add(light);
-
-  camera.position.z = 4;
-  // camera.rotation.order = 'ZXY';
-  animate();
+function authorize_login(){
+    fetch('/authorize_login')
+    .then(resp => resp.text())
+    .then(data=>{
+        window.location.href = data;
+    });
 }
 
-function animate() {
-	requestAnimationFrame( animate );
-  renderer.render( scene, camera );
-  cube.rotation.x = degrees_to_radians(data.y);
-  cube.rotation.y = degrees_to_radians(data.z);
-  cube.rotation.z = degrees_to_radians(data.x);
-  // cube.rotation.x += .01;
-  // cube.rotation.y += .01;
-  // cube.scale.x = 1 + data.x/100;
-  // cube.scale.y = 1 + data.x/100;
-  // cube.scale.z = 1 + data.x/100;
-}
 
-function executeSender(){
-  document.body.style.backgroundColor = "orange";
-  document.body.onclick = startRequest;
-}
-
-function startRequest(){
-  if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-    DeviceOrientationEvent.requestPermission()
-      .then(permissionState => {
-        if (permissionState === 'granted') {
-          // User accepted
-          runOrientationListener();
-        }
-      })
-      .catch(e=>{
-        // User declined
-        console.log("Declined");
-      });
-    } else {
-      // Has access
-      runOrientationListener();
-    }
-}
-
-function runOrientationListener(){
-  window.addEventListener('deviceorientation', () => {
-    let newX = Math.round(event.alpha)
-    let newY = Math.round(event.beta+180);
-    let newZ = Math.round(event.gamma+180);
-    // if(Math.abs(newX - data.x) > 30){return;}
-    if(newX == data.x && newY == data.y && newZ == data.z){return;}
-    data.x = newX;
-    data.y = newY;
-    data.z = newZ;
-    setData();
-    socket.emit('new_rotation', {x: newX, y: newY, z: newZ});
+function retrieve_token(){
+  document.getElementById('btn-authorize').remove();
+  fetch('/retrieve_token', {method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({code: auth_code})
+                  })
+  .then(resp => resp.text())
+  .then(data=>{
+    console.log('ok');
+    let search_btn = `<div id='btn-search' class='btn' onclick='request()'>REQUEST</div>`;
+    search_btn += `<input type='text' id='search-input' style='width: 200px;'></div>`;
+    search_btn += `<img id='load-gif' style='display: none' src='assets/load.gif'/>`;
+    search_btn += `<div id='results' style=' min-width: 200px; min-height: 400px; width: fit-content; height: fit-content; padding: 2px; border: 2px solid black;'></div>`;
+    document.body.insertAdjacentHTML('beforeend', search_btn);
+    document.getElementById('search-input').addEventListener('keyup', e=>{
+      if(e.keyCode == 13){
+        request();
+      }
+    });
   });
 }
 
-function degrees_to_radians(degrees)
-{
-  var pi = Math.PI;
-  return degrees * (pi/180);
+function request(){
+  let result_box = document.getElementById('results');
+  document.getElementById('load-gif').style.display = 'block';
+  // result_box.style.filter = "blur(2px)";
+  fetch('/ask', {method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({user_req: document.getElementById('search-input').value})
+                    })
+    .then(resp => resp.text())
+    .then(data=>{
+      // result_box.style.filter = '';
+      document.getElementById('load-gif').style.display = 'none';
+      result_box.innerHTML = '';
+      data = JSON.parse(data);
+      console.log(data.songs[0].img);
+      console.log(data.songs[1].img);
+      console.log(data.songs[2].img);
+      for(var i = 0; i < data.songs.length; i++){
+        document.body.style.filter = "blur(0px)";
+        let new_song = document.createElement('div');
+        new_song.classList.add('song-item')
+        let a = data.songs[i].uri
+        let b = data.songs[i].img;
+        new_song.addEventListener('click', ()=>{
+          playSong(a);
+        });
+        
+        let img_div = document.createElement('img');
+        let text_div = document.createElement('p');
+        text_div.innerHTML = data.songs[i].title + ` - <span class='artist-text'>` + data.songs[i].artist + `</span>`;
+        img_div.classList.add('img-item');
+        img_div.src = b;
+        new_song.insertAdjacentElement('beforeend', img_div);
+        new_song.insertAdjacentElement('beforeend', text_div);
+        result_box.insertAdjacentElement('beforeend', new_song);
+        // result_box.insertAdjacentHTML('beforeend', `<div class='song-item' style='border-bottom: 2px solid black;' onclick='playSong()'>` +  + `</div>`)
+      }
+    });
+}
+
+function playSong(uri){
+  console.log('wowowo');
+  console.log(uri);
+  fetch('/play', {method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({id: uri})
+                    })
+    .then(resp => resp.text())
+    .then(data=>{
+
+    });
 }
