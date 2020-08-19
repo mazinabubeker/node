@@ -10,6 +10,10 @@ var app = express();
 var server = app.listen(process.env.PORT || 3000);
 app.use(express.static('public'));
 app.use(express.json());
+// const REDIRECT_URL = "https://spatifyapp.herokuapp.com/";
+const REDIRECT_URL = "http://localhost:3000/";
+
+
 
 
 /* Authorize Spotify API */
@@ -24,7 +28,7 @@ app.get('/authorize_login', function(req, res) {
   '?response_type=code' +
   '&client_id=' + c_id +
   (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
-  '&redirect_uri=' + encodeURIComponent("http://localhost:3000"));
+  '&redirect_uri=' + encodeURIComponent(REDIRECT_URL));
 });
 
 // Retrieve Token
@@ -38,7 +42,7 @@ app.post('/retrieve_token', function(req, res) {
     form: {
       grant_type: "authorization_code",
       code: req.body.code,
-      redirect_uri: "http://localhost:3000"
+      redirect_uri: REDIRECT_URL
     },
     json: true
   };
@@ -67,7 +71,9 @@ app.post('/ask', function(req, res) {
     console.log("Status: " + response.statusCode + " " + response.statusMessage);
     if(!error){
       var results = {songs: []};
+      console.log(body.tracks.items[0]);
       for(var i = 0; i < body.tracks.items.length; i++){
+        
         results.songs.push({title: body.tracks.items[i].name, 
                             artist: body.tracks.items[i].artists[0].name, 
                             uri: body.tracks.items[i].uri,
